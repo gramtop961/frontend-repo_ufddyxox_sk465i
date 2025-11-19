@@ -1,4 +1,5 @@
 import Dashboard from './components/Dashboard'
+import Sidebar from './components/Sidebar'
 
 function App() {
   return (
@@ -8,8 +9,15 @@ function App() {
       <div className="pointer-events-none absolute -bottom-24 -right-24 h-[28rem] w-[28rem] rounded-full bg-amber-200/40 blur-3xl"></div>
       <div className="pointer-events-none absolute top-1/3 -right-20 h-80 w-80 rounded-full bg-emerald-200/40 blur-3xl"></div>
 
-      <div className="relative py-10">
-        <Dashboard />
+      <div className="relative py-6">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex gap-6">
+            <Sidebar />
+            <div className="flex-1">
+              <Dashboard />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
