@@ -3,13 +3,28 @@ import { useApi } from './ApiClient'
 
 function Section({ title, children, action }) {
   return (
-    <div className="bg-white/80 backdrop-blur rounded-xl shadow p-5 border border-slate-200">
+    <div className="bg-white/50 backdrop-blur-xl rounded-2xl shadow-xl p-5 border border-white/40">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-semibold text-slate-800">{title}</h3>
+        <h3 className="text-lg font-semibold text-teal-900/90">{title}</h3>
         {action}
       </div>
       {children}
     </div>
+  )
+}
+
+function Label({ children }) {
+  return <div className="text-xs font-medium text-teal-900/70 mb-1">{children}</div>
+}
+
+function Button({ children, className = '', ...props }) {
+  return (
+    <button
+      className={`px-3 py-2 rounded-lg text-teal-900 bg-teal-200/60 hover:bg-teal-200/80 border border-teal-300/50 shadow-sm transition ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
   )
 }
 
@@ -59,22 +74,24 @@ export default function Dashboard() {
     refreshAll()
   }, [])
 
+  const inputBase = 'px-3 py-2 rounded-lg border border-white/50 bg-white/40 placeholder:text-teal-900/50 text-teal-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-400/50'
+
   const simpleInput = (value, onChange, placeholder) => (
     <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-      className="px-3 py-2 rounded border w-full" />
+      className={`${inputBase} w-full`} />
   )
 
   const list = (items, fields) => (
     <div className="overflow-auto">
-      <table className="min-w-full text-sm">
+      <table className="min-w-full text-sm text-teal-900/90">
         <thead>
-          <tr className="text-left text-slate-500">
+          <tr className="text-left text-teal-900/60">
             {fields.map(f => <th key={f} className="py-2 pr-4">{f}</th>)}
           </tr>
         </thead>
         <tbody>
           {items.map((it, i) => (
-            <tr key={i} className="border-t">
+            <tr key={i} className="border-t border-white/50">
               {fields.map(f => <td key={f} className="py-2 pr-4">{String(it[f] ?? '')}</td>)}
             </tr>
           ))}
@@ -123,13 +140,13 @@ export default function Dashboard() {
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-white">Real Estate Manager</h1>
-        <p className="text-slate-200">Manage properties, tenants, utilities, and bills.</p>
-        <p className="text-slate-300 text-sm">API Base: {base}</p>
+        <h1 className="text-3xl font-bold text-teal-900">Real Estate Manager</h1>
+        <p className="text-teal-900/80">Manage properties, tenants, utilities, and bills.</p>
+        <p className="text-teal-900/60 text-sm">API Base: {base}</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <Section title="Owners" action={<button onClick={createOwner} className="px-3 py-2 bg-blue-600 text-white rounded">Add</button>}>
+        <Section title="Owners" action={<Button onClick={createOwner}>Add</Button>}>
           <div className="grid grid-cols-3 gap-2 mb-3">
             {simpleInput(ownerForm.name, v => setOwnerForm({ ...ownerForm, name: v }), 'Name')}
             {simpleInput(ownerForm.email, v => setOwnerForm({ ...ownerForm, email: v }), 'Email')}
@@ -138,7 +155,7 @@ export default function Dashboard() {
           {list(owners, ['name', 'email', 'phone'])}
         </Section>
 
-        <Section title="Properties" action={<button onClick={createProperty} className="px-3 py-2 bg-blue-600 text-white rounded">Add</button>}>
+        <Section title="Properties" action={<Button onClick={createProperty}>Add</Button>}>
           <div className="grid grid-cols-3 gap-2 mb-3">
             {simpleInput(propForm.owner_id, v => setPropForm({ ...propForm, owner_id: v }), 'Owner ID')}
             {simpleInput(propForm.name, v => setPropForm({ ...propForm, name: v }), 'Name')}
@@ -147,7 +164,7 @@ export default function Dashboard() {
           {list(properties, ['owner_id', 'name', 'address'])}
         </Section>
 
-        <Section title="Units" action={<button onClick={createUnit} className="px-3 py-2 bg-blue-600 text-white rounded">Add</button>}>
+        <Section title="Units" action={<Button onClick={createUnit}>Add</Button>}>
           <div className="grid grid-cols-3 gap-2 mb-3">
             {simpleInput(unitForm.property_id, v => setUnitForm({ ...unitForm, property_id: v }), 'Property ID')}
             {simpleInput(unitForm.unit_number, v => setUnitForm({ ...unitForm, unit_number: v }), 'Unit #')}
@@ -156,7 +173,7 @@ export default function Dashboard() {
           {list(units, ['property_id', 'unit_number', 'square_feet', 'tenant_id'])}
         </Section>
 
-        <Section title="Tenants" action={<button onClick={createTenant} className="px-3 py-2 bg-blue-600 text-white rounded">Add</button>}>
+        <Section title="Tenants" action={<Button onClick={createTenant}>Add</Button>}>
           <div className="grid grid-cols-4 gap-2 mb-3">
             {simpleInput(tenantForm.property_id, v => setTenantForm({ ...tenantForm, property_id: v }), 'Property ID')}
             {simpleInput(tenantForm.unit_id, v => setTenantForm({ ...tenantForm, unit_id: v }), 'Unit ID')}
@@ -166,24 +183,24 @@ export default function Dashboard() {
           {list(tenants, ['property_id', 'unit_id', 'name', 'email'])}
         </Section>
 
-        <Section title="Parse Utility Invoice" action={<button onClick={doParse} className="px-3 py-2 bg-emerald-600 text-white rounded">Parse</button>}>
+        <Section title="Parse Utility Invoice" action={<Button className="bg-emerald-200/70 hover:bg-emerald-200/90" onClick={doParse}>Parse</Button>}>
           <textarea value={parseText} onChange={e => setParseText(e.target.value)} rows={6}
-            className="w-full p-3 border rounded mb-3 font-mono" />
+            className={`w-full p-3 rounded-xl mb-3 font-mono ${inputBase}`} />
           {parseResult && (
-            <div className="text-sm">
+            <div className="text-sm text-teal-900/90">
               <div className="font-semibold mb-1">Found:</div>
-              <pre className="bg-slate-900 text-emerald-300 p-3 rounded overflow-auto">{JSON.stringify(parseResult, null, 2)}</pre>
+              <pre className="bg-emerald-50/80 text-teal-900 p-3 rounded-xl overflow-auto border border-emerald-200/60">{JSON.stringify(parseResult, null, 2)}</pre>
               <div className="mt-3">
-                <button onClick={() => {
+                <Button className="bg-purple-200/70 hover:bg-purple-200/90" onClick={() => {
                   if (!parseResult?.totals) return
                   Object.entries(parseResult.totals).forEach(([k, v]) => addBillItem(k, v))
-                }} className="px-3 py-2 bg-purple-600 text-white rounded">Add as Bill Items</button>
+                }}>Add as Bill Items</Button>
               </div>
             </div>
           )}
         </Section>
 
-        <Section title="Create Bill" action={<button onClick={createBill} className="px-3 py-2 bg-blue-600 text-white rounded">Create</button>}>
+        <Section title="Create Bill" action={<Button onClick={createBill}>Create</Button>}>
           <div className="grid grid-cols-5 gap-2 mb-3">
             {simpleInput(billForm.tenant_id, v => setBillForm({ ...billForm, tenant_id: v }), 'Tenant ID')}
             {simpleInput(billForm.unit_id, v => setBillForm({ ...billForm, unit_id: v }), 'Unit ID')}
@@ -191,12 +208,12 @@ export default function Dashboard() {
             {simpleInput(billForm.period, v => setBillForm({ ...billForm, period: v }), 'Period (YYYY-MM)')}
             {simpleInput(billForm.total, v => setBillForm({ ...billForm, total: Number(v || 0) }), 'Total')}
           </div>
-          <div className="text-sm text-slate-700 mb-2">Items:</div>
+          <div className="text-sm text-teal-900/80 mb-2">Items:</div>
           <div className="space-y-2">
             {(billForm.items || []).map((it, idx) => (
               <div key={idx} className="flex items-center gap-2">
-                <input value={it.label} readOnly className="px-2 py-1 border rounded w-1/2" />
-                <input value={it.amount} readOnly className="px-2 py-1 border rounded w-1/2" />
+                <input value={it.label} readOnly className={`w-1/2 ${inputBase}`} />
+                <input value={it.amount} readOnly className={`w-1/2 ${inputBase}`} />
               </div>
             ))}
           </div>

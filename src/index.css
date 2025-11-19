@@ -5,11 +5,11 @@
 @layer base {
   :root {
     --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-geist: 'Geist', system-ui, sans-serif;
-    --font-geist-mono: 'Geist Mono', monospace;
-    --font-mona: 'Mona Sans', system-ui, sans-serif;
-    --font-ibm-plex: 'IBM Plex Sans', system-ui, sans-serif;
-    --font-manrope: 'Manrope', system-ui, sans-serif;
+    --turquoise-50: #effcfb;
+    --turquoise-100: #d9faf6;
+    --turquoise-200: #bdf3ec;
+    --sand-50: #fffaf2;
+    --sand-100: #f7efe3;
   }
 
   html {
@@ -19,6 +19,13 @@
 
   body {
     @apply antialiased;
+  }
+}
+
+/* Glassmorphism helpers */
+@layer components {
+  .glass {
+    @apply bg-white/40 backdrop-blur-xl border border-white/50 shadow-xl;
   }
 }
 
